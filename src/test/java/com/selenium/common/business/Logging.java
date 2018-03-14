@@ -18,9 +18,9 @@ import com.selenium.common.basic.SetUp;
 
 public class Logging {
 	
-	private static WebDriver wd = SetUp.getWEBDRIVER();
+	private WebDriver wd = SetUp.getWEBDRIVER();
 		
-	public static void loginControl(String url, String username, String password, String db) {
+	public void loginControl(String url, String username, String password, String db) {
 		if (url.indexOf("http") == -1)
 		{
 			url = "http://" + url;
@@ -52,7 +52,7 @@ public class Logging {
 		}
 	}
 	
-	public static void logoutControl() {
+	public void logoutControl() {
 		wd.switchTo().defaultContent();
 		wd.switchTo().frame("topFrame");
 		try
@@ -71,7 +71,7 @@ public class Logging {
 		alertbox.accept();
 	}
 	
-	public static void loginAgent(String url, String username, String password) {	
+	public void loginAgent(String url, String username, String password) {	
 		if (url.indexOf("http") == -1)
 		{
 			url = "http://" + url;
@@ -105,7 +105,7 @@ public class Logging {
 		}	
 	}
 	
-	public static void logoutAgent() {
+	public void logoutAgent() {
 		wd.switchTo().defaultContent();
 		wd.switchTo().frame("mbody");
 		try
@@ -124,7 +124,7 @@ public class Logging {
 		alertbox.accept();
 	}
 	
-	public static void loginMember(String url, String username, String password) {
+	public void loginMember(String url, String username, String password) {
 		if (url.indexOf("http") == -1)
 		{
 			url = "http://" + url;
@@ -143,7 +143,7 @@ public class Logging {
 
 	}
 
-	public static void logoutMember() {
+	public void logoutMember() {
 		
 		try
 		{
@@ -164,5 +164,9 @@ public class Logging {
 		Alert alertbox = wd.switchTo().alert();
 		alertbox.accept();
 		
+	}
+	
+	public void browserQuit() {
+		wd.quit();
 	}
 }

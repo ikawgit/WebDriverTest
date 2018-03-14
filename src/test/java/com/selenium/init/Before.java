@@ -31,12 +31,13 @@ public class Before {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  
+		}
+        SetUp.setTESTENV(properties.getProperty("TESTENV"));
         SetUp.setBROWSER(properties.getProperty("BROWSER"));
         
         DriverFactory df = new DriverFactory();
-        //SetUp.setWEBDRIVER(df.createDriver(properties.getProperty("NODE"), SetUp.getBROWSER()));
-        SetUp.setWEBDRIVER(df.createDriver());
+        SetUp.setWEBDRIVER(df.createDriver(properties.getProperty("NODE"), SetUp.getBROWSER()));
+        //SetUp.setWEBDRIVER(df.createDriver());
         
 	}
 	

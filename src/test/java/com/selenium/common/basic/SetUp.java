@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 
 public class SetUp {
 	
+	public static String TESTENV;
 	public static String PLATFORM	 	= "member";
 	public static WebDriver WEBDRIVER	= null;
 	public static String NODE;
@@ -12,7 +13,12 @@ public class SetUp {
 	public static String DIR;
 	public static String DATANAME;
 
-	
+	public static String getTESTENV() {
+		return TESTENV;
+	}
+	public static void setTESTENV(String tESTENV) {
+		TESTENV = tESTENV;
+	}
 	public static String getPLATFORM() {
 		return PLATFORM;
 	}
@@ -54,8 +60,6 @@ public class SetUp {
 	}
 	public static void setDATANAME(String dATANAME) {
 		DATANAME = dATANAME;
-	}
-	
-	
+	}	
 
 }

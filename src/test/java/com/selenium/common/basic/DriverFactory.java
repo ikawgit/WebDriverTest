@@ -74,4 +74,8 @@ public class DriverFactory {
 		this.driver = this.createDriver("chrome");
 		return this.driver;
 	}
+	
+	public void quit() {
+		driver.quit();
+	}
 }

@@ -5,14 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;  
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;  
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;  
   
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;  
 import org.apache.poi.ss.usermodel.Cell;  
-import org.apache.poi.ss.usermodel.DateUtil;  
 import org.apache.poi.ss.usermodel.Row;  
 import org.apache.poi.ss.usermodel.Sheet;  
 import org.apache.poi.ss.usermodel.Workbook;  
@@ -32,11 +30,11 @@ public class ReadExcelUtil {
         try {  
             InputStream is = new FileInputStream(filepath);  
             if(".xls".equals(ext)){  
-                wb = new HSSFWorkbook(is);  
+                wb = new HSSFWorkbook(is); 
             }else if(".xlsx".equals(ext)){  
-                wb = new XSSFWorkbook(is);  
+                wb = new XSSFWorkbook(is);
             }else{  
-                wb=null;  
+                wb=null;
             }  
         } catch (FileNotFoundException e) {  
         	System.out.println(e);
@@ -45,86 +43,123 @@ public class ReadExcelUtil {
         }  
     }  
       
-  
-    public List<Map<String, String>> rowTitleData(String sheetname) {
-    	    	
-    	for (int n = 0; n < wb.getNumberOfSheets(); n++)
-    	{
-    		if (!sheetname.equals(wb.getSheetName(n)))
-    		{
-    			continue;
-    		}
-    		else
-    		{
-    			sheet = wb.getSheet(sheetname);
-    			break;
-    		}
- //   		System.out.println("输入的Sheet不存在");
-    	}
-
+    public List<Map<String, String>> getRowTitleData(String sheetname) throws Exception{
     	if (wb == null) {
-    		System.out.println("Workbook对象为空");
-    		return null;
+    		readExceptions("Workbook对象为空");
     	}
-    	int totalrow = sheet.getPhysicalNumberOfRows(); 	
-    	rowtitle = sheet.getRow(0);
-    	int totalcol = rowtitle.getPhysicalNumberOfCells();
-    	for (int i = 1; i <= totalrow; i++)
-    	{
-    		Row row = sheet.getRow(i);
-    		Map<String, String> rowmap = new HashMap<String, String>();
-    		for (int j = 0; j <= totalcol; j++)
-    		{
-    			Cell cell = row.getCell(j);
-    			rowmap.put(getCellFormatValue(rowtitle.getCell(j)), getCellFormatValue(cell));
-    		}
-    		listmap.add(i, rowmap);
-    	}	
+    	sheet = wb.getSheet(sheetname);
+    	rowTitleData();
+    	return listmap;   	
+    }
+        
+    public List<Map<String, String>> getRowTitleData(int sheetindex) throws Exception{
+    	if (wb == null) {   		
+    		readExceptions("Workbook对象为空");
+    	}
+    	
+    	if (sheetindex < wb.getNumberOfSheets()) {
+    		sheet = wb.getSheetAt(sheetindex);
+        	rowTitleData();
+    	}
+    	else {
+    		readExceptions("Sheet页不存在");
+    	}
+		return listmap;
+    }
+    
+    public List<Map<String, String>> getRowTitleData() throws Exception{
+    	if (wb == null) {
+    		readExceptions("Workbook对象为空");
+    	}
+    	sheet = wb.getSheetAt(0);
+        rowTitleData();
+        return listmap;
+    }
+    
+    public List<Map<String, String>> getColTitleData(int rows) throws Exception{
+    	if (wb == null) {
+    		readExceptions("Workbook对象为空");
+    	}
+    	sheet = wb.getSheetAt(0);
+    	colTitleData(rows);
     	return listmap;
     }
     
-        
-    /** 
-     * 读取Excel数据内容 
-     *  
-     * @param InputStream 
-     * @return Map 包含单元格数据内容的Map对象 
-     * @author zengwendong 
-     */  
-/*    public Map<Integer, Map<Integer,Object>> readExcelContent() throws Exception{  
-        if(wb==null){  
-            throw new Exception("Workbook对象为空！");  
-        }  
-        Map<Integer, Map<Integer,Object>> content = new HashMap<Integer, Map<Integer,Object>>();  
-          
-        sheet = wb.getSheetAt(0);  
-        // 得到总行数  
-        int rowNum = sheet.getLastRowNum();  
-        row = sheet.getRow(0);  
-        int colNum = row.getPhysicalNumberOfCells();  
-        // 正文内容应该从第二行开始,第一行为表头的标题  
-        for (int i = 1; i <= rowNum; i++) {  
-            row = sheet.getRow(i);  
-            int j = 0;  
-            Map<Integer,Object> cellValue = new HashMap<Integer, Object>();  
-            while (j < colNum) {  
-                Object obj = getCellFormatValue(row.getCell(j));  
-                cellValue.put(j, obj);  
-                j++;  
-            }  
-            content.put(i, cellValue);  
-        }  
-        return content;  
-    }  */
-  
-    /** 
-     *  
-     * 根据Cell类型设置数据 
-     *  
-     * @param cell 
-     * @return 
-     * @author zengwendong 
-     */  
+    public List<Map<String, String>> getColTitleData(String sheetname, int rows) throws Exception{
+    	if (wb == null) {
+    		readExceptions("Workbook对象为空");
+    	}  
+    	sheet = wb.getSheet(sheetname);
+    	colTitleData(rows);
+    	return listmap;
+    }
+    
+    public void colTitleData(int rows) throws Exception{
+    	
+
+    	sheet = wb.getSheetAt(0);
+    	if (sheet == null) {
+    		readExceptions("Sheet页不存在");    		
+    	}   	
+    	listmap= new ArrayList<Map<String, String>>();
+    	int rownow = 0;
+    	while (sheet.getRow(rownow)!=null)
+    	{
+    		Map<String, String> rowmap = new HashMap<String, String>();
+    		for (int n = 0; n < rows-1; n++) {
+    			Row row = sheet.getRow(rownow);
+    			//System.out.println(rownow);
+    			//System.out.println(getCellFormatValue(row.getCell(0)));
+    			//System.out.println(getCellFormatValue(row.getCell(1)));
+/*    			if (row != null) {
+    				
+    				Cell key = row.getCell(0);
+    				Cell value = row.getCell(1);
+    			
+    				if (key!=null&&value!=null)
+    				{
+    					rowmap.put(getCellFormatValue(key), getCellFormatValue(value));
+    				}
+    			}*/
+    			rowmap.put(getCellFormatValue(row.getCell(0)), getCellFormatValue(row.getCell(1)));
+    			rownow += 1;
+    		}
+    		//System.out.println(sheet.getRow(rownow).getCell(0));
+    		listmap.add(rowmap);
+    		rownow += 1;    	
+    	}
+    	//System.out.println(listmap);
+    }
+    
+    public void rowTitleData() throws Exception {
+    	    	    	
+    	if (sheet == null) {
+    		readExceptions("Sheet页不存在");
+    	}
+    	
+    	int totalrow = sheet.getPhysicalNumberOfRows();
+    	//System.out.println(totalrow);
+    	rowtitle = sheet.getRow(0);
+    	int totalcol = rowtitle.getPhysicalNumberOfCells();
+    	//System.out.println(totalcol);
+    	
+    	listmap= new ArrayList<Map<String, String>>();
+    	for (int i = 1; i < totalrow; i++)
+    	{
+    		Row row = sheet.getRow(i);
+    		Map<String, String> rowmap = new HashMap<String, String>();
+    		for (int j = 0; j < totalcol; j++)
+    		{
+    			Cell cell = row.getCell(j);
+    			//System.out.println(i);
+    			//System.out.println(j);
+    			rowmap.put(getCellFormatValue(rowtitle.getCell(j)), getCellFormatValue(cell));
+    		}
+    		listmap.add(rowmap);
+    		//System.out.println(listmap);
+    	}	
+    }
+    
     private String getCellFormatValue(Cell cell) {  
         String cellvalue = "";  
         if (cell != null) {  
@@ -159,20 +194,12 @@ public class ReadExcelUtil {
                 break;
             }  
         } else {  
-            cellvalue = "";  
+           cellvalue = "";  
         }  
         return cellvalue;  
     }  
   
-    public static void main(String[] args) {  
-      
-            String filepath = "D:\\Auto\\bwt\\Pay\\data.xlsx";  
-            ReadExcelUtil excelReader = new ReadExcelUtil(filepath);  
-            List<Map<String, String>> testdata = excelReader.rowTitleData("商户信息");
-            System.out.println("获得Excel表格的内容:");  
-            for (int i = 1; i <= testdata.size(); i++) {  
-            	Map<String, String> testdatamap = testdata.get(i);
-            	System.out.println(testdatamap);
-            }  
-    }  
+    private void readExceptions(String e) throws Exception {
+    	throw new Exception(e);
+    }
 }  
