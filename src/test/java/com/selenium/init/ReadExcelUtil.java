@@ -150,10 +150,17 @@ public class ReadExcelUtil {
     		Map<String, String> rowmap = new HashMap<String, String>();
     		for (int j = 0; j < totalcol; j++)
     		{
-    			Cell cell = row.getCell(j);
-    			//System.out.println(i);
-    			//System.out.println(j);
-    			rowmap.put(getCellFormatValue(rowtitle.getCell(j)), getCellFormatValue(cell));
+    			Cell keycell = rowtitle.getCell(j);
+    			Cell valuecell = null;
+    			if (row != null) {
+    				valuecell = row.getCell(j);
+    			}
+    			if (valuecell == null) {
+    				rowmap.put(getCellFormatValue(keycell), "");
+    			}
+    			else {
+    				rowmap.put(getCellFormatValue(keycell), getCellFormatValue(valuecell));
+    			}
     		}
     		listmap.add(rowmap);
     		//System.out.println(listmap);

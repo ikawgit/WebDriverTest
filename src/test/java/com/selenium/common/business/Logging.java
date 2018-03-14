@@ -145,16 +145,25 @@ public class Logging {
 
 	public void logoutMember() {
 		
+		WebElement btn = null;
 		try
 		{
-		WebElement btn = wd.findElement(By.xpath("//*[@id=\"loginBox\"]/li[3]/p"));
-		Actions action = new Actions(wd);
-		action.moveToElement(btn).perform();
-		wd.findElement(By.xpath("//*[@id=\"wrap\"]/dl/dd[1]/ul/li[7]")).click();
+		btn = wd.findElement(By.xpath("//*[@id=\"loginBox\"]/li[3]/p"));
 		} catch (Exception e)
 		{
 			System.out.println("未登录");
 		}
+		Actions action = new Actions(wd);
+		action.moveToElement(btn).perform();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		wd.findElement(By.xpath("//*[@id=\"wrap\"]/dl/dd[1]/ul/li[18]")).click();
+		
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {

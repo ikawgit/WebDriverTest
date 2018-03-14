@@ -24,7 +24,7 @@ public class AddMerchants extends Before {
 		
 	AddMerchants() {
 		super();
-		String filepath = SetUp.getDIR()+"\\src\\test\\java\\data\\addMerchants.xlsx";
+		String filepath = SetUp.getDIR()+"\\src\\test\\java\\data\\AddMerchants.xlsx";
 		ReadExcelUtil excelReader = new ReadExcelUtil(filepath);  
 		try {
 			List<Map<String, String>> envdatas = excelReader.getColTitleData("环境信息",7);
